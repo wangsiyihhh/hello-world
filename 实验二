@@ -1,0 +1,394 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+void Menu();
+int getChoice();
+void doExercise(int ch);
+
+void integer(int choice);
+void decimals(int choice);
+void mixInteger();
+void mixDecimals();
+void integerAnswer(int y[]);
+void decimalsAnswer(double y[]);
+
+int subject = 0;			//题目数量
+int max = 0;				//最大范围
+int decimal = 0;			//小数运算
+int bracket = 0;			//混合运算
+int file = 0;				//输出方式
+FILE *r;
+
+int main()
+{
+	int choice = 0;
+	int again = 0;
+	Menu();
+	choice = getChoice();
+	printf("请输入题目数量：");
+	scanf("%d",&subject);
+	printf("请输入运算数范围：");
+	scanf("%d",&max);
+	printf("请输入 1/0 代表 是/否有小数：");
+	scanf("%d",&decimal);
+	if(choice == 5){
+				printf("请输入 1/0 代表 是/否有括号：");
+				scanf("%d",&bracket);
+	 }
+	printf("请输入 1/0 代表 输出文件/显示在屏幕 ：");
+	scanf("%d", &file);
+	if (file == 1)
+	{
+		printf("\n生成 四则运算.txt文件");
+	}
+	r = fopen("四则运算.txt", "w");
+
+	printf("\n\n");
+	if (choice != 5)
+	{
+		if (decimal == 0) {
+			integer(choice);
+		}
+		else {
+			decimals(choice);
+		}
+	}
+	else {
+		if (decimal == 0) {
+			mixInteger(); 
+		}
+		else {
+			mixDecimals();
+		}
+	}
+	fclose(r);
+	printf("\n请输入1/0选择是否重新运行运行该程序？\n");
+	scanf("%d", &again);
+	if (again == 1)
+	{
+		system("cls");
+		main();
+	}
+
+	return 0;
+	
+}
+
+void Menu()
+{
+
+	printf("-----------------------------------------\n");
+	printf("       欢迎使用小学生四则运算练习题          \n");
+	printf("               1.加法练习                 \n");
+	printf("               2.减法练习                 \n");
+	printf("               3.乘法练习                 \n");
+	printf("               4.除法练习                 \n");
+	printf("               5.混合练习                 \n");
+	printf("     注意：小数练习结果请保留两位小数      \n");
+	printf("-----------------------------------------\n");
+
+}
+
+int getChoice()
+{
+	int choice;
+	printf("请输入你练习的题型：");
+	scanf("%d",&choice);
+	return choice;
+}
+
+void integer(int choice)
+{
+	int i;
+	int num1;
+	int num2;
+	int x[100];
+	char ch;
+	for (i = 1; i < subject + 1; i++)
+	{	
+		num1 = rand() % (max + 1);			
+		num2 = rand() % (max + 1);
+		while (num2 == 0) {
+				num2 = rand() % (max + 1);
+			}
+
+		if (choice == 1) {
+			ch = '+';
+			x[i] = num1 + num2;
+		}
+		else if (choice == 2)
+		{
+			ch = '-';
+			x[i] = num1 - num2;
+		}
+		else if (choice == 3) {
+			ch = '*';
+			x[i] = num1 * num2;
+		}
+		else if (choice == 4) {
+			ch = '/';
+			x[i] = num1 / num2;
+		}
+
+		if (file == 0) {
+			printf("(%d) %d%c%d=\n", i, num1, ch, num2);
+		}
+		else {
+			fprintf(r, "(%d) %d%c%d=\n", i,num1, ch, num2);
+		}
+	}
+	integerAnswer(x);
+}
+
+void  decimals(int choice)
+{
+	int i;
+	double x[100];
+	double num1;
+	double num2;
+	char ch;
+	for (i = 1; i < subject + 1; i++)
+	{		
+		num1 = rand() % (max * 100) / 100.00;	
+		num2 = rand() % (max * 100) / 100.00;
+		while (num2 == 0) {
+				num2 = rand() % (max * 100) / 100.00;
+			}
+
+		if (choice == 1) {
+			ch = '+';
+			x[i] = num1 + num2;
+		}
+		else if (choice == 2) {
+			ch = '-';
+			x[i] = num1 - num2;
+		}
+		else if (choice == 3) {
+			ch = '*';
+			x[i] = num1 * num2;
+		}
+		else if (choice == 4) {
+			ch = '/';
+			x[i] = num1 / num2;
+		}
+
+		if (file == 0) {
+			printf("(%d) %.2f%c%.2f=\n", i, num1, ch, num2);
+		}
+		else {
+			fprintf(r, "(%d) %.2f%c%.2f=\n", i,num1, ch, num2);
+		}
+	}
+	decimalsAnswer(x);
+}
+void  mixInteger()
+{
+	int i;
+	int num1;
+	int num2;
+	int num3;
+	int x[100];
+	char d, e;
+	for (i = 1; i < subject + 1; i++)
+	{		
+		num1 = rand() % (max + 1);			
+		num2 = rand() % (max + 1);
+		num3 = rand() % (max + 1);
+		while (num2 == 0) {
+				num2 = rand() % (max * 100) / 100.00;
+			}
+		while (num3 == 0) {
+				num3 = rand() % (max + 1);
+			}
+
+		if (i % 4 == 0) {
+			d = '-';
+			e = '*';
+
+			if (bracket == 0) {
+				x[i] = num1 - num2 * num3;
+			}
+			else {
+				x[i] = (num1 - num2) * num3;
+			}
+		}
+		else if (i % 3 == 0) {
+			d = '+';
+			e = '/';
+
+			if (bracket == 0) {
+				x[i] = num1 + num2 / num3;
+			}
+			else {
+				x[i] = (num1 + num2) / num3;
+			}
+		}
+		else if (i % 2 == 0) {
+			d = '-';
+			e = '/';
+
+			if (bracket == 0) {
+				x[i] = num1 - num2 / num3;
+			}
+			else {
+				x[i] = (num1 - num2) / num3;
+			}
+		}
+		else {
+			d = '+';
+			e = '*';
+
+			if( bracket == 0) {
+				x[i] = num1 + num2 * num3;
+			}
+			else {
+				x[i] = (num1 + num2) * num3;
+			}
+		}
+		if (file == 0) {
+			if (bracket == 0) {
+				printf("(%d) %d%c%d%c%d=\n", i, num1, d, num2, e, num3);
+			}
+			else {
+				printf("(%d) (%d%c%d)%c%d=\n", i, num1, d, num2, e, num3);
+			}
+		}
+		else {
+			if (file == 1) {
+				fprintf(r, "(%d) %d%c%d%c%d=\n", i, num1, d, num2, e, num3);
+			}
+			else {
+				fprintf(r, "(%d) (%d%c%d)%c%d=\n", i,num1, d, num2, e, num3);
+			}
+		}
+	}
+	integerAnswer(x);
+}
+
+void mixDecimals()
+{
+	int i;
+	double x[100];
+	double num1;
+	double num2;
+	double num3;
+	char d, e;
+
+	for (i = 1; i < subject + 1; i++)
+	{		
+		num1 = rand() % (max * 100) / 100.00;	
+		num2 = rand() % (max * 100) / 100.00;
+		num3 = rand() % (max * 100) / 100.00;
+		while (num2 == 0) {
+				num2 = rand() % (max * 100) / 100.00;
+			}
+		while (num3 == 0) {
+				num3 = rand() % (max * 100) / 100.00;
+			}
+
+		if (i % 4 == 0) {
+			d = '-';
+			e = '*';
+
+			if (bracket == 0) {
+				x[i] = num1 - num2 * num3;
+			}
+			else {
+				x[i] = (num1 - num2) * num3;
+			}
+		}
+		else if (i % 3 == 0) {
+			d = '+';
+			e = '/';
+			
+			if (bracket == 0) {
+				x[i] = num1 + num2 / num3;
+			}
+			else {
+				x[i] = (num1 + num2) / num3;
+			}
+		}
+		else if (i % 2 == 0) {
+			d = '-';
+			e = '/';
+			
+			if (bracket == 0) {
+				x[i] = num1 - num2 / num3;
+			}
+			else {
+				x[i] = (num1 - num2) / num3;
+			}
+		}
+		else {
+			d = '+';
+			e = '*';
+
+			if (bracket == 0) {
+				x[i] = num1 + num2 * num3;
+			}
+			else {
+				x[i] = (num1 + num2) * num3;
+			}
+		}
+		if (file == 0) {
+			if (bracket == 0) {
+				printf("(%d) %.2f%c%.2f%c%.2f=\n", i, num1, d, num2, e, num3);
+			}
+			else {
+				printf("(%d) (%.2f%c%.2f)%c%.2f=\n",i, num1, d, num2, e, num3);
+			}
+		}
+		else {
+			if (bracket == 0) {
+				fprintf(r, "(%d) %.2f%c%.2f%c%.2f=\n", i, num1, d, num2, e, num3);
+			}
+			else {
+				fprintf(r, "(%d) (%.2f%c%.2f)%c%.2f=\n",i, num1, d, num2, e, num3);
+			}
+		}
+	}
+
+	decimalsAnswer(x);
+}
+
+void integerAnswer(int y[])
+{
+	int i;
+	if (file == 0) {
+		printf("\n正确答案：\n");
+		for (i = 1; i < subject + 1; i++)
+		{
+			printf("(%d) %d\n", i, y[i]);
+		}
+		
+	}
+	else {
+		fprintf(r, "\n正确答案：\n");
+		for (i = 1; i < subject + 1; i++)
+		{
+			fprintf(r,"(%d) %d\n", i, y[i]);
+		}
+
+	}
+}
+
+void  decimalsAnswer(double y[])
+{
+	int i;
+	if (file == 0) {
+		printf("\n正确答案：\n");
+		for (i = 1; i < subject + 1; i++)
+		{
+			printf("(%d) %.2f\n", i, y[i]);
+		}
+	}
+	else {
+		fprintf(r, "\n正确答案：\n");
+		for (i = 1; i < subject + 1; i++)
+		{
+			fprintf(r, "(%d) %.2f\n", i, y[i]);
+		}
+	}
+}
+
